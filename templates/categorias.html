@@ -1,0 +1,55 @@
+{% extends 'base/base.html' %}{% block titulo %} Mundo Música - Posts por
+Categorías {% endblock %} {% block contenido %}
+
+<section
+  style="
+    margin: 25px;
+    color: #2f3640;
+    background-color: #f5f6fa;
+    padding: 0px 140px;
+  "
+>
+  {% for categoria, posts in posts_por_categoria.items %}
+  <h1 style="text-align: start; margin-bottom: 40px; margin-top: 40px">
+    {{ categoria.nombre }}
+  </h1>
+  <div
+    style="
+      border-top: 2px solid black;
+      margin-top: 50px;
+      margin: 25px;
+      color: #2f3640;
+      padding: 0px 140px;
+    "
+  ></div>
+  <div>
+    <div class="container">
+      <div class="row justify-content-center" style="text-align: center">
+        {% for post in posts %}
+        <div class="col-md-5 my-2 mx-2">
+          <div class="card" style="width: 18rem">
+            <img
+              src="{{post.portada}}"
+              class="card-img-top"
+              alt="{{post.titulo}}"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{post.titulo}}</h5>
+              <p>{{post.categoria}}</p>
+              <a
+                href="{% url 'post-detail' post_id=post.id %}"
+                class="btn btn-dark"
+                >Leer</a
+              >
+            </div>
+          </div>
+        </div>
+
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {% endfor %}
+</section>
+{% endblock contenido %}

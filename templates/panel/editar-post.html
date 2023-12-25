@@ -1,0 +1,63 @@
+{% extends 'base/base.html' %}{% block titulo %} Mundo Música - Panel de Edición
+{% endblock %} {% block contenido %}
+
+<section
+  style="
+    margin: 25px;
+    padding: 140px 140px;
+    color: #2f3640;
+    background-color: #f5f6fa;
+  "
+>
+  <h1 style="text-align: center">Editar Post</h1>
+  <form style="margin-bottom: 15px" method="post">
+    {% csrf_token %}
+
+    <div style="margin-bottom: 10px">
+      <strong style="display: block">{{form.titulo.label_tag}}</strong>
+      <input
+        class="form-control"
+        type="text"
+        name="{{ form.titulo.name }}"
+        value="{{ form.titulo.value }}"
+      />
+    </div>
+
+    <div style="margin-bottom: 10px">
+      <strong style="display: block">{{form.portada.label_tag}}</strong>
+      <input
+        class="form-control"
+        type="text"
+        name="{{ form.portada.name }}"
+        value="{{ form.portada.value }}"
+      />
+    </div>
+
+    <div style="margin-bottom: 10px">
+      <strong style="display: block">{{form.texto.label_tag}}</strong>
+      <textarea
+        style="height: 300px"
+        class="form-control"
+        id="texto"
+        name="{{form.texto.name}}"
+      >
+{{form.texto.value}}</textarea
+      >
+    </div>
+
+    <div style="margin-bottom: 10px">
+      <strong style="display: block">{{form.autor.label_tag}}</strong>
+
+      {{form.autor}}
+    </div>
+
+    <div style="margin-bottom: 10px">
+      <strong style="display: block">{{form.categoria.label_tag}}</strong>
+      {{form.categoria}}
+    </div>
+
+    <button type="submit">Guardar cambios</button>
+  </form>
+  <a href="{% url 'panel-colaboradores' %}">Volver al panel de colaboradores</a>
+  {% endblock contenido %}
+</section>

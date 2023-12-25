@@ -1,0 +1,110 @@
+{% extends "base/base.html" %} {% load static %} {% block title %} Mundo Música
+- Home {% endblock title %} {%block contenido%}
+
+<section>
+  <div
+    class="p-5 text-center bg-image rounded-0"
+    style="
+      background-image: url('https://cdn.pixabay.com/photo/2020/11/02/05/56/music-5705801_1280.jpg');
+      height: 800px;
+      width: 100%;
+      background-size: cover;
+      background-repeat: no-repeat;
+    "
+  >
+    <div class="mask" style="background-color: rgba(0, 0, 0, 0.6)">
+      <div class="d-flex justify-content-center align-items-center h-100">
+        <div class="text-white">
+          <h1 class="mb-3">BIENVENIDO A MUNDO MÚSICA</h1>
+          <h4 class="mb-3">🎵 Aquí puedes dejar sonar la rocola 🎶</h4>
+          <a
+            class="btn btn-outline-light btn-lg mt-5"
+            href="#contenido"
+            role="button"
+            >Lo Más Nuevo</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<h1 style="text-align: center; margin-bottom: 50px; margin-top: 120px;">
+  🤩Nuestros Posts Más Destacados🤩
+</h1>
+<section
+  id="contenido"
+  class="container mt-5"
+  style="padding: 140px 140px; color: #2f3640; background-color: #f5f6fa"
+>
+<div style="margin-bottom: 40px;">
+  <form method="get" id="filtroForm" style="margin-bottom: 50px;">
+    <div class="filter-controls">
+      <label for="categoria">Filtrar por Categoría:</label>
+      <select id="categoria" name="categoria" onchange="submitForm()">
+          <option value="" {% if not categoria_seleccionada %}selected{% endif %}>Todas</option>
+          {% for categoria in categorias %}
+              <option value="{{ categoria.nombre }}" {% if categoria_seleccionada == categoria.nombre %}selected{% endif %}>
+                  {{ categoria.nombre }}
+              </option>
+          {% endfor %}
+      </select>
+    </div>
+  </form>
+
+  <form method="get" action="">
+    <label for="orden">Ordenar por:</label>
+    <select id="orden" name="orden" onchange="this.form.submit()">
+        <option value="asc_titulo" {% if request.GET.orden == 'asc_titulo' %}selected{% endif %}>Ascendente (Alfabético)</option>
+        <option value="desc_titulo" {% if request.GET.orden == 'desc_titulo' %}selected{% endif %}>Descendente (Alfabético)</option>
+        <option value="asc_fecha" {% if request.GET.orden == 'asc_fecha' %}selected{% endif %}>Ascendente (Fecha)</option>
+        <option value="desc_fecha" {% if request.GET.orden == 'desc_fecha' %}selected{% endif %}>Descendente (Fecha)</option>
+    </select>
+  </form>
+</div>
+  
+  
+  
+  <script>
+    function submitForm() {
+      document.getElementById("filtroForm").submit();
+    }
+  </script>
+
+  <div class="container">
+    <div class="row justify-content-center" style="text-align: center">
+      {% for post in posts %}
+      <div class="col-md-5 my-2 mx-2">
+        <div class="card" style="width: 18rem">
+          <img
+            src="{{post.portada}}"
+            class="card-img-top"
+            alt="{{post.titulo}}"
+          />
+          <div class="card-body">
+            <h5 class="card-title">{{post.titulo}}</h5>
+            <p>{{post.categoria}}</p>
+            <p>{{post.fecha_publicacion}}</p>
+            <a
+              href="{% url 'post-detail' post_id=post.id %}"
+              class="btn btn-dark"
+              >Leer</a
+            >
+          </div>
+        </div>
+      </div>
+
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script>
+  const categoriaSeleccionada = "{{ categoria_seleccionada }}";
+  const contenidoSection = document.getElementById("contenido");
+
+  if (categoriaSeleccionada && contenidoSection) {
+    contenidoSection.scrollIntoView({ behavior: "smooth" });
+  }
+</script>
+{%endblock contenido%}

@@ -1,0 +1,150 @@
+{% extends 'base/base.html' %}{% block titulo %} Mundo Música - Panel de Gestión
+{% endblock %} {% block contenido %} {% if user.role == 'colaborador' %}
+
+<!-- Contenido del panel de colaboradores -->
+<section
+  id="controls"
+  style="
+    margin: 25px;
+    color: #2f3640;
+    background-color: #f5f6fa;
+    padding: 0px 140px;
+  "
+>
+  <div style="margin-top: 10px">
+    <h1 style="text-align: center">Bienvenido al Panel de Colaboradores</h1>
+  </div>
+  {% include '../include/error_forms.html' %}
+  <form method="POST">
+    {% csrf_token %}
+
+    <div style="margin-top: 100px">
+      <div class="mb-3">
+        <label for="titulo" class="form-label">Título del Post</label>
+        <input type="text" class="form-control" id="titulo" name="titulo" />
+      </div>
+
+      <div class="mb-3">
+        <label for="portada" class="form-label">URL de la Portada</label>
+        <input type="text" class="form-control" id="portada" name="portada" />
+      </div>
+
+      <div class="mb-3">
+        <label style="display: block" for="autor" class="form-label"
+          >Autor</label
+        >
+        {{form.autor}}
+      </div>
+
+      <div class="mb-3">
+        <label style="display: block" for="categoria" class="form-label"
+          >Categoría</label
+        >
+        {{form.categoria}}
+      </div>
+
+      <div class="mb-3">
+        <label for="texto" class="form-label">Contenido</label>
+        <textarea class="form-control" id="texto" name="texto"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="margin-top: 40px">
+        Crear Nuevo Post
+      </button>
+    </div>
+  </form>
+</section>
+
+<div
+  style="
+    border-top: 2px solid black;
+    margin-top: 50px;
+    margin: 25px;
+    color: #2f3640;
+    padding: 0px 140px;
+  "
+></div>
+
+<section
+  id="all-posts"
+  style="
+    margin: 25px;
+    color: #2f3640;
+    background-color: #f5f6fa;
+    padding: 0px 140px;
+  "
+>
+
+<div style="margin-bottom: 40px;">
+  <form method="get" id="filtroForm" style="margin-bottom: 50px;">
+    <div class="filter-controls">
+      <label for="categoria">Filtrar por Categoría:</label>
+      <select id="categoria" name="categoria" onchange="submitForm()">
+          <option value="" {% if not categoria_seleccionada %}selected{% endif %}>Todas</option>
+          {% for categoria in categorias %}
+              <option value="{{ categoria.nombre }}" {% if categoria_seleccionada == categoria.nombre %}selected{% endif %}>
+                  {{ categoria.nombre }}
+              </option>
+          {% endfor %}
+      </select>
+    </div>
+  </form>
+
+  <form method="get" action="">
+    <label for="orden">Ordenar por:</label>
+    <select id="orden" name="orden" onchange="this.form.submit()">
+        <option value="asc_titulo" {% if request.GET.orden == 'asc_titulo' %}selected{% endif %}>Ascendente (Alfabético)</option>
+        <option value="desc_titulo" {% if request.GET.orden == 'desc_titulo' %}selected{% endif %}>Descendente (Alfabético)</option>
+        <option value="asc_fecha" {% if request.GET.orden == 'asc_fecha' %}selected{% endif %}>Ascendente (Fecha)</option>
+        <option value="desc_fecha" {% if request.GET.orden == 'desc_fecha' %}selected{% endif %}>Descendente (Fecha)</option>
+    </select>
+  </form>
+</div>
+
+
+<script>
+  function submitForm() {
+    document.getElementById("filtroForm").submit();
+  }
+</script>
+  <div class="container">
+    <div class="row justify-content-center" style="text-align: center">
+      {% for post in posts %}
+      <div class="col-md-5 my-2 mx-2">
+        <div class="card" style="width: 18rem">
+          <img
+            src="{{post.portada}}"
+            class="card-img-top"
+            alt="{{post.titulo}}"
+          />
+          <div class="card-body">
+            <h5 class="card-title">{{post.titulo}}</h5>
+            <p>{{post.categoria}}</p>
+            <p>{{post.fecha_publicacion}}</p>
+            <a
+              href="{% url 'post-detail' post_id=post.id %}"
+              class="btn btn-dark"
+              >Leer</a
+            >
+            <a
+              href="{% url 'eliminar-post' post_id=post.id %}"
+              class="btn btn-danger"
+              >Eliminar</a
+            >
+            <a
+              href="{% url 'editar-post' post_id=post.id %}"
+              class="btn btn-warning"
+              >Editar</a
+            >
+          </div>
+        </div>
+      </div>
+
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Resto del contenido -->
+
+{% endif %} {% endblock contenido %}

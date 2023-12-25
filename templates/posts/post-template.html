@@ -1,0 +1,100 @@
+{% extends "base/base.html" %} {% load static %} {% block title %} Mundo Música
+- Posts {% endblock title %} {%block contenido%}
+
+<img
+  src="{{ post.portada }}"
+  alt="{{ post.titulo }}"
+  style="
+    height: 800px;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+  "
+/>
+<section
+  style="
+    margin: 25px;
+    color: #2f3640;
+    background-color: #f5f6fa;
+    padding: 100px 140px;
+    
+  "
+>
+  <div>
+    <div style="text-align: center; margin-top: 100px">
+      <h1>{{ post.titulo }}</h1>
+    </div>
+
+    <div style="flex-direction: column">
+      <h6><span style="font-weight: bold">Por:</span> {{ post.autor }}</h6>
+      <h6>
+        <span style="font-weight: bold">Categoría:</span> {{ post.categoria }}
+      </h6>
+      <h6>
+        <span style="font-weight: bold">Fecha: {{ post.fecha_publicacion }}
+      </h6>
+    </div>
+
+    <p>{{ post.texto|linebreaks|safe }}</p>
+  
+
+  </div>
+</section>
+
+<div
+  style="
+    border-top: 2px solid black;
+    margin-top: 50px;
+    margin: 25px;
+    color: #2f3640;
+    padding: 0px 140px;
+  "
+></div>
+
+<section style="
+margin: 25px;
+color: #2f3640;
+background-color: #f5f6fa;
+padding: 100px 140px;
+
+">
+<h1>Comentarios</h1>
+
+{% if user.is_authenticated %}
+<h3>Añadir Comentario</h3>
+<form method="post" action="">
+    {% csrf_token %}
+    {{ form.texto }}
+    <button type="submit">Enviar Comentario</button>
+</form>
+{% else %}
+<p>Debes <a href="{% url 'login' %}">loguearte</a> para comentar.</p>
+{% endif %}
+
+
+{% for comentario in comentarios %}
+    <div>
+        <p>
+            <strong>{{ comentario.autor.username }}:</strong>
+            {{ comentario.texto }}
+            
+            
+            {% if user.is_authenticated and user == comentario.autor %}
+                <a href="{% url 'editar-comentario' comentario_id=comentario.id post_id=post.id %}">editar</a> | <a href="{% url 'eliminar-comentario' comentario_id=comentario.id post_id=post.id %}">eliminar</a>
+
+            {% elif user.role == 'colaborador' or user == comentario.autor %}
+                <a href="{% url 'eliminar-comentario' comentario_id=comentario.id post_id=post.id %}">eliminar</a>
+            {% endif %}
+                
+        </p>
+
+      </div>
+    </div>
+{% endfor %}
+
+
+
+
+</section>
+
+{%endblock contenido%}

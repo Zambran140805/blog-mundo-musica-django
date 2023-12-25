@@ -1,0 +1,29 @@
+{% extends "base/base.html" %} {% load static %} {% block title %} Mundo Música
+- Editar Comentario {% endblock title %} {%block contenido%}
+
+<section
+  style="
+    margin: 25px;
+    padding: 140px 140px;
+    color: #2f3640;
+    background-color: #f5f6fa;
+  "
+>
+  <form method="POST">
+    {% csrf_token %}
+    <textarea
+      style="margin-bottom: 25px"
+      class="form-control"
+      name="{{form.texto.name}}"
+      id="texto"
+      cols="3"
+      rows="5"
+    >
+        {{ form.texto.value|default:comentario.texto }}</textarea
+    >
+
+    <button type="submit">Guardar Cambios</button>
+  </form>
+</section>
+
+{%endblock contenido%}
